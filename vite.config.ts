@@ -4,16 +4,15 @@ import path from 'path';
 import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
+  // 這裡的第三個參數設為 ''，代表載入所有環境變數
   const env = loadEnv(mode, '.', '');
+  
   return {
-    // 🛠️ 修正 1：將 '/__NWdrawer__/' 改為 './'，解決 Vercel 找不到檔案的 404 白屏問題
-    //base: '/__NWdrawer__/',
     base: './', 
     plugins: [react(), tailwindcss()],
     define: {
-      // 🛠️ 修正 2：讓它同時支援本地和 Vercel 的環境變數
-      //'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY),
+      // ✨ 關鍵修正：強制在 Vite 打包時，把 Vercel 的後台環境變數融進網頁中
+      'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY),
     },
     resolve: {
       alias: {
@@ -21,8 +20,6 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
   };
