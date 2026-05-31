@@ -13,7 +13,7 @@ export default defineConfig(({mode}) => {
     define: {
       // 🛠️ 修正 2：讓它同時支援本地和 Vercel 的環境變數
       //'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY || env.GEMINI_API_KEY),
+      'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY),
     },
     resolve: {
       alias: {
